@@ -3,20 +3,37 @@ class ProductManager {
         this.products = []
     }
 
+    // Verifico que todos los campos esten llenos
+    allAttributesFilled(product) {
+        for (const attr in product) {
+            if (!product[attr]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Ingreso un nuevo producto
     addProduct(product) {
         const prod = this.products.find(prod => prod.code === product.code)
 
         if (prod) {
             console.log("Este producto ya existe")
         } else {
-            this.products.push(product)
+            if (this.allAttributesFilled(product)) {
+                this.products.push(product)
+            } else {
+                console.log("Todos los campos son obligatorios")
+            }
         }
     }
 
+    // Obtengo los productos
     getProducts() {
         console.log(this.products)
     }
 
+    // Obtengo un producto por su id
     getProductById(id) {
         const prod = this.products.find(prod => prod.id === id)
 
@@ -51,7 +68,7 @@ class Product {
     }
 }
 
-const prod1 = new Product("Arroz", "Leopardo", 12000, [], "A125", 20)
+const prod1 = new Product("Arroz", "", 12000, [], "A125", 20)
 const prod2 = new Product("Cafe", "Universal", 8000, [], "C200", 30)
 const prod3 = new Product("Leche", "Ciledco", 10000, [], "L358", 50)
 const prod4 = new Product("Guayaba", "Roja", 3000, [], "G358", 30)
