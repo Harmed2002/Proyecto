@@ -1,5 +1,7 @@
 import { promises as fs } from 'fs';
 
+const PATH_PRODUCTS = './src/data/products.json';
+
 class ProductManager {
 	constructor(pathProducts) {
 		this.path = pathProducts;
@@ -37,17 +39,27 @@ class ProductManager {
 	}
 
 	// Ingreso un nuevo producto
-	async addProduct(product) {
-		const prod = this.products.find(prod => prod.code === product.code)
+	// async addProduct(product) {
+	async addProduct(code, title, price, description, category, status, stock, thumbnail) {
+		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
+
+		// Valido si existe el cod. de producto
+		const prod = products.find((prd) => prd.code === code)
 
 		// Si el producto existe
 		if (prod)
 			console.log("El producto ya existe en el almacén");
 
 		else {
-			if (this.allAttributesFilled(prod)) {
-				products.push(prod); // Ingreso el nuevo producto en el array
+			// Obtengo el número de productos
+			const cant = products.reduce((max, product) => (product.id > max ? product.id : max), 0);
+			// Instancio la clase Producto
+			const product = new Product(cant, code, title, price, description, category, status, stock, thumbnail);
+			console.log(product);
+			if (this.allAttributesFilled(product)) {
+				products.push(product); // Ingreso el nuevo producto en el array
 				await fs.writeFile(this.path, JSON.stringify(products));
+				return product;
 	
 			} else {
 				console.log("Todos los campos son obligatorios")
@@ -57,8 +69,8 @@ class ProductManager {
 }
 
 class Product {
-	constructor(code, title, price, description, category, status, stock, thumbnail) {
-		this.id = Product.getId()
+	constructor(cant, code, title, price, description, category, status, stock, thumbnail) {
+		this.id = cant + 1
 		this.code = code
 		this.title = title
 		this.price = price
@@ -70,15 +82,20 @@ class Product {
 	}
 
 	// Creo el método que obtiene el id sgte.
-	static getId() {
-		if (this.nextId) {
-			this.nextId++
+	async getId() {
+		const prods = await fs.readFile(PATH_PRODUCTS, 'UTF-8');
+        const data = JSON.parse(prods);
+        const maxId = data.reduce((max, product) => (product.id > max ? product.id : max), 0);
+        return maxId + 1;
 
-		} else {
-			this.nextId = 1
-		}
+		// if (this.nextId) {
+		// 	this.nextId++
 
-		return this.nextId
+		// } else {
+		// 	this.nextId = 1
+		// }
+
+		// return this.nextId
 	}
 }
 

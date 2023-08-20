@@ -37,15 +37,28 @@ appRouter.get('/products/:pid', async (req, res) => {
 	res.status(200).send(product);
 })
 
-appRouter.post('/', async (req, res)=> {
-	const { code, title, price, description, category, status, stock, thumbnail } = req.body;
-	const product = await ProductManager.addProducts(code, title, price, description, category, status, stock, thumbnail);
-	
-	if (product.success){
-	  res.status(200).send(product.message)
-	} else {
-	  res.status(400).send(product.message)
+appRouter.post('/product', async (req, res)=> {
+	const { code, title, price, description, category, status, stock, thumbnails } = req.body;
+	// Creo el objeto Prod
+	// const Prod = {
+	// 	code			: code,
+	// 	title			: title,
+	// 	price			: price,
+	// 	description		: description,
+	// 	category		: category,
+	// 	status			: status,
+	// 	stock			: stock,
+	// 	thumbnail		: thumbnail
+	// }
+
+	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnails);
+
+	if (!product){
+		return res.status(400).send("Error el ingresar producto")
 	}
-  });
+
+	res.status(200).send("Producto ingresado")
+
+});
 
 export default appRouter;
