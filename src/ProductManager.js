@@ -115,12 +115,12 @@ class Product {
 	}
 
 	// Creo el método que obtiene el id sgte.
-	async getId() {
-        const data = JSON.parse(products);
-        const maxId = data.reduce((max, product) => (product.id > max ? product.id : max), 0);
-        return maxId + 1;
+	// async getId() {
+    //     const data = JSON.parse(products);
+    //     const maxId = data.reduce((max, product) => (product.id > max ? product.id : max), 0);
+    //     return maxId + 1;
 
-	}
+	// }
 }
 
 export default ProductManager;
