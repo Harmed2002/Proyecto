@@ -1,7 +1,5 @@
 import { promises as fs } from 'fs';
 
-const PATH_PRODUCTS = './src/data/products.json';
-
 class ProductManager {
 	constructor(pathProducts) {
 		this.path = pathProducts;
@@ -39,7 +37,6 @@ class ProductManager {
 	}
 
 	// Ingreso un nuevo producto
-	// async addProduct(product) {
 	async addProduct(code, title, price, description, category, status, stock, thumbnail) {
 		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
 
@@ -53,9 +50,10 @@ class ProductManager {
 		else {
 			// Obtengo el número de productos
 			const cant = products.reduce((max, product) => (product.id > max ? product.id : max), 0);
+
 			// Instancio la clase Producto
 			const product = new Product(cant, code, title, price, description, category, status, stock, thumbnail);
-			console.log(product);
+
 			if (this.allAttributesFilled(product)) {
 				products.push(product); // Ingreso el nuevo producto en el array
 				await fs.writeFile(this.path, JSON.stringify(products));
@@ -66,6 +64,42 @@ class ProductManager {
 			}
 		}
 	}
+
+	// Actualizo un producto por su id
+	async updateProduct(id, product){
+		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
+		const index = products.findIndex((prod) => prod.id === id);
+
+		// Si el producto existe
+		if(index >= 0){
+			products[index].title		= product.title;		// Actualizo el valor del title
+			products[index].description	= product.description;	// Actualizo el valor del description
+			products[index].price		= product.price;		// Actualizo el valor del price
+			products[index].thumbnail	= product.thumbnail;	// Actualizo el valor del thumbnail
+			products[index].code		= product.code;			// Actualizo el valor del code
+			products[index].stock		= product.stock;		// Actualizo el valor del stock
+
+			await fs.writeFile(this.path, JSON.stringify(products));
+			console.log(`El producto con id: ${id} ha sido actualizado`);
+			return product;
+		} else {
+			console.log(`El producto con id: ${id} no existe`);
+		}
+		// 	const productUpdate= data.products[index];
+	
+		// 	if (product.title) productUpdate.title = product.title;
+		// 	if (product.description) productUpdate.description = product.description;
+		// 	if (product.price) productUpdate.price = product.price;
+		// 	if (product.thumbnail) productUpdate.thumbnail = product.thumbnail;
+		// 	if (product.code) productUpdate.code = product.code;
+		// 	if (product.stock) productUpdate.stock = product.stock;
+	
+			 
+		// 	await fs.writeFile(this.path, JSON.stringify(data))
+	
+		// 	return {success: true, message:`Producto ${product.title} actualizado exitosamente`}
+		// } else {return {success: false, message:"El producto no se ha encontrado."}}
+	  }
 }
 
 class Product {
@@ -83,19 +117,12 @@ class Product {
 
 	// Creo el método que obtiene el id sgte.
 	async getId() {
+		const PATH_PRODUCTS = './src/data/products.json';
 		const prods = await fs.readFile(PATH_PRODUCTS, 'UTF-8');
         const data = JSON.parse(prods);
         const maxId = data.reduce((max, product) => (product.id > max ? product.id : max), 0);
         return maxId + 1;
 
-		// if (this.nextId) {
-		// 	this.nextId++
-
-		// } else {
-		// 	this.nextId = 1
-		// }
-
-		// return this.nextId
 	}
 }
 

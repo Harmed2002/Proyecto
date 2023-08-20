@@ -6,6 +6,7 @@ const appRouter = Router();
 const PATH_PRODUCTS = './src/data/products.json';
 const productManager = new ProductManager(PATH_PRODUCTS);
 
+// Mostrar todos los productos
 appRouter.get('/', async (req, res) => {
 	const products = await productManager.getProducts();
 
@@ -26,6 +27,7 @@ appRouter.get('/', async (req, res) => {
 	}	
 })
 
+// Mostrar un producto por id
 appRouter.get('/products/:pid', async (req, res) => {
 	const { pid } = req.params;
 	const product = await productManager.getProductById(parseInt(pid));
@@ -37,19 +39,9 @@ appRouter.get('/products/:pid', async (req, res) => {
 	res.status(200).send(product);
 })
 
+// Inserción de producto
 appRouter.post('/product', async (req, res)=> {
 	const { code, title, price, description, category, status, stock, thumbnails } = req.body;
-	// Creo el objeto Prod
-	// const Prod = {
-	// 	code			: code,
-	// 	title			: title,
-	// 	price			: price,
-	// 	description		: description,
-	// 	category		: category,
-	// 	status			: status,
-	// 	stock			: stock,
-	// 	thumbnail		: thumbnail
-	// }
 
 	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnails);
 
@@ -60,5 +52,18 @@ appRouter.post('/product', async (req, res)=> {
 	res.status(200).send("Producto ingresado")
 
 });
+
+// Actualización de un producto
+appRouter.put('/:pid', async (req, res)=> {
+	const {pid} = req.params;
+	const proData = req.body;
+	const product = await productManager.updateProduct(parseInt(pid), proData);
+  
+	if(!product){
+		return res.status(400).send("Error el actualizar producto");
+	}
+	
+	res.status(200).send("Producto actualizado");
+})
 
 export default appRouter;
