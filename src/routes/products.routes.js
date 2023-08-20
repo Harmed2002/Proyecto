@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import ProductManager from '../ProductManager.js';
 
-const appRouter = Router();
-
+const productRouter = Router();
 const PATH_PRODUCTS = './src/data/products.json';
 const productManager = new ProductManager(PATH_PRODUCTS);
 
 // Mostrar todos los productos
-appRouter.get('/', async (req, res) => {
+productRouter.get('/', async (req, res) => {
 	const products = await productManager.getProducts();
 
 	if (products) {
@@ -28,7 +27,7 @@ appRouter.get('/', async (req, res) => {
 })
 
 // Mostrar un producto por id
-appRouter.get('/products/:pid', async (req, res) => {
+productRouter.get('/products/:pid', async (req, res) => {
 	const { pid } = req.params;
 	const product = await productManager.getProductById(parseInt(pid));
 	
@@ -40,7 +39,7 @@ appRouter.get('/products/:pid', async (req, res) => {
 })
 
 // Inserción de producto
-appRouter.post('/product', async (req, res)=> {
+productRouter.post('/product', async (req, res)=> {
 	const { code, title, price, description, category, status, stock, thumbnails } = req.body;
 
 	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnails);
@@ -54,7 +53,7 @@ appRouter.post('/product', async (req, res)=> {
 });
 
 // Actualización de un producto
-appRouter.put('/:pid', async (req, res)=> {
+productRouter.put('/:pid', async (req, res)=> {
 	const {pid} = req.params;
 	const proData = req.body;
 	const product = await productManager.updateProduct(parseInt(pid), proData);
@@ -67,7 +66,7 @@ appRouter.put('/:pid', async (req, res)=> {
 })
 
 // Eliminación de un producto
-appRouter.delete('/:pid', async (req, res)=> {
+productRouter.delete('/:pid', async (req, res)=> {
 	const {pid} = req.params;
 	const product = await productManager.deleteProduct(parseInt(pid));
   
@@ -78,4 +77,4 @@ appRouter.delete('/:pid', async (req, res)=> {
 	return res.status(200).send("Producto eliminado")
   })
 
-export default appRouter;
+export default productRouter;

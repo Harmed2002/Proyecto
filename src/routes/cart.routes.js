@@ -1,8 +1,10 @@
 import { Router } from "express";
-// import CartProduct from "../CartManager.js";
+import CartManager from '../CartManager.js';
 
 const cartRouter = Router();
-// const cartNews = new CartProduct();
+const PATH_CARTS = './src/data/carts.json';
+const cartManager = new CartManager(PATH_CARTS);
+
 
 cartRouter.get('/:cid', async (req, res) => {
 	const { cid } = req.params;
