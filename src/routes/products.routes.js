@@ -66,4 +66,16 @@ appRouter.put('/:pid', async (req, res)=> {
 	res.status(200).send("Producto actualizado");
 })
 
+// Eliminación de un producto
+appRouter.delete('/:pid', async (req, res)=> {
+	const {pid} = req.params;
+	const product = await productManager.deleteProduct(parseInt(pid));
+  
+	if(!product){
+		res.status(400).send("Error el eliminar producto")
+	}
+	
+	return res.status(200).send("Producto eliminado")
+  })
+
 export default appRouter;

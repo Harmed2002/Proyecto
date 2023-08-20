@@ -81,25 +81,28 @@ class ProductManager {
 
 			await fs.writeFile(this.path, JSON.stringify(products));
 			console.log(`El producto con id: ${id} ha sido actualizado`);
+
 			return product;
+
 		} else {
 			console.log(`El producto con id: ${id} no existe`);
 		}
-		// 	const productUpdate= data.products[index];
+	}
+
+	async deleteProduct(id){
+		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
+		const producto = products.find(prod => prod.id === id);
 	
-		// 	if (product.title) productUpdate.title = product.title;
-		// 	if (product.description) productUpdate.description = product.description;
-		// 	if (product.price) productUpdate.price = product.price;
-		// 	if (product.thumbnail) productUpdate.thumbnail = product.thumbnail;
-		// 	if (product.code) productUpdate.code = product.code;
-		// 	if (product.stock) productUpdate.stock = product.stock;
-	
-			 
-		// 	await fs.writeFile(this.path, JSON.stringify(data))
-	
-		// 	return {success: true, message:`Producto ${product.title} actualizado exitosamente`}
-		// } else {return {success: false, message:"El producto no se ha encontrado."}}
-	  }
+		// Si el producto existe
+		if (producto) {
+			await fs.writeFile(this.path, JSON.stringify(products.filter(prod => prod.id != id))); // Filtro por el id de producto diferente al id a borrar
+			console.log(`El producto con id: ${id} ha sido eliminado`);
+
+			return producto;
+		} else {
+			console.log(`El producto con id: ${id} no existe`);
+		}
+	}
 }
 
 class Product {
