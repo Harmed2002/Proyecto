@@ -1,5 +1,8 @@
 import { promises as fs } from 'fs';
 
+const PATH_PRODUCTS = './src/data/products.json';
+const products = JSON.parse(await fs.readFile(PATH_PRODUCTS, 'UTF-8')); // Leo la info. del archivo JSON
+
 class ProductManager {
 	constructor(pathProducts) {
 		this.path = pathProducts;
@@ -8,14 +11,11 @@ class ProductManager {
 
 	// Obtengo todos los productos
 	async getProducts() {
-		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
-
 		return products;
 	}
 
 	// Obtengo un producto por su ID
 	async getProductById(id) {
-		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
 		const product = products.find(product => product.id === id)
 		
 		if (!product) {
@@ -38,8 +38,6 @@ class ProductManager {
 
 	// Ingreso un nuevo producto
 	async addProduct(code, title, price, description, category, status, stock, thumbnail) {
-		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
-
 		// Valido si existe el cod. de producto
 		const prod = products.find((prd) => prd.code === code)
 
@@ -67,7 +65,6 @@ class ProductManager {
 
 	// Actualizo un producto por su id
 	async updateProduct(id, product){
-		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
 		const index = products.findIndex((prod) => prod.id === id);
 
 		// Si el producto existe
@@ -90,7 +87,6 @@ class ProductManager {
 	}
 
 	async deleteProduct(id){
-		const products = JSON.parse(await fs.readFile(this.path, 'UTF-8')); // Leo la info. del archivo JSON
 		const producto = products.find(prod => prod.id === id);
 	
 		// Si el producto existe
@@ -120,9 +116,7 @@ class Product {
 
 	// Creo el método que obtiene el id sgte.
 	async getId() {
-		const PATH_PRODUCTS = './src/data/products.json';
-		const prods = await fs.readFile(PATH_PRODUCTS, 'UTF-8');
-        const data = JSON.parse(prods);
+        const data = JSON.parse(products);
         const maxId = data.reduce((max, product) => (product.id > max ? product.id : max), 0);
         return maxId + 1;
 

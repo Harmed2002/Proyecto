@@ -27,7 +27,7 @@ productRouter.get('/', async (req, res) => {
 })
 
 // Mostrar un producto por id
-productRouter.get('/products/:pid', async (req, res) => {
+productRouter.get('/:pid', async (req, res) => {
 	const { pid } = req.params;
 	const product = await productManager.getProductById(parseInt(pid));
 	
@@ -39,7 +39,7 @@ productRouter.get('/products/:pid', async (req, res) => {
 })
 
 // Inserción de producto
-productRouter.post('/product', async (req, res)=> {
+productRouter.post('/', async (req, res)=> {
 	const { code, title, price, description, category, status, stock, thumbnails } = req.body;
 
 	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnails);

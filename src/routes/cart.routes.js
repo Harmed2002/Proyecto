@@ -2,13 +2,12 @@ import { Router } from "express";
 import CartManager from '../CartManager.js';
 
 const cartRouter = Router();
-const PATH_CARTS = './src/data/carts.json';
+const PATH_CARTS = '../data/carts.json';
 const cartManager = new CartManager(PATH_CARTS);
 
-
 cartRouter.get('/:cid', async (req, res) => {
-	const { cid } = req.params;
-	const product = await cartNews.getCartById(parseInt(cid));
+	const { id } = req.params;
+	const product = await cartManager.getCartById(parseInt(id));
 
 	if (product.success) {
 		res.status(200).send(product.message)
@@ -17,26 +16,15 @@ cartRouter.get('/:cid', async (req, res) => {
 	}
 });
 
+// Crea un nuevo carrito
 cartRouter.post('/', async (req, res) => {
-	const products = await cartNews.addProducts();
+	const products = await cartManager.addProducts();
 	if (products.success) {
 		res.status(200).send(products.message)
 	} else {
 		res.status(400).send("Ha ocurrido un error.")
 	}
 });
-
-cartRouter.post('/:cid/products/:pid', async (req, res) => {
-	const { cid, pid } = req.params
-	const prodAdd = await cartNews.addProductByProduct(parseInt(cid), parseInt(pid));
-
-	if (prodAdd.success) {
-		res.status(200).send("Se ha creado el producto exitosamente")
-	} else {
-		res.status(400).send("No se ha logrado crear el producto deseado.")
-	}
-
-})
 
 
 export default cartRouter;
