@@ -27,6 +27,7 @@ class CartManager {
 		return cart;
 	}
 
+	// Crea un nuevo carrito de compras
 	async addNewCart() {
 		// Obtengo el número de carritos
 		const cant = carts.reduce((max, cart) => (cart.id > max ? cart.id : max), 0);
@@ -42,6 +43,7 @@ class CartManager {
 		return cart;
 	}
 
+	// Agrega un producto al carrito de compras
 	async addProductToCart(cartId, productId, quantity) {
 		let product = {};
 		try {

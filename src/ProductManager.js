@@ -86,6 +86,7 @@ class ProductManager {
 		}
 	}
 
+	// Borra un producto
 	async deleteProduct(id){
 		const producto = products.find(prod => prod.id === id);
 	
@@ -113,14 +114,6 @@ class Product {
 		this.stock = stock
 		this.thumbnail = thumbnail
 	}
-
-	// Creo el método que obtiene el id sgte.
-	// async getId() {
-    //     const data = JSON.parse(products);
-    //     const maxId = data.reduce((max, product) => (product.id > max ? product.id : max), 0);
-    //     return maxId + 1;
-
-	// }
 }
 
 export default ProductManager;
