@@ -79,12 +79,10 @@ class CartManager {
 			} else {
 				console.log("Nuevo producto al carrito.");
 				product = {id: parseInt(productId), quantity: parseInt(quantity)}
-				console.log("product1", product)
 				carts[cartIndex].products.push(product);
 			}
 
 			await fs.writeFile(PATH_CARTS, JSON.stringify(carts));
-			console.log("product2", product)
 			return product;
 
 		} catch (error) {

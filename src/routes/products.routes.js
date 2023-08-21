@@ -40,9 +40,9 @@ productRouter.get('/:pid', async (req, res) => {
 
 // Inserción de producto
 productRouter.post('/', async (req, res)=> {
-	const { code, title, price, description, category, status, stock, thumbnails } = req.body;
+	const { code, title, price, description, category, status, stock, thumbnail } = req.body;
 
-	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnails);
+	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnail);
 
 	if (!product){
 		return res.status(400).send("Error el ingresar producto")
