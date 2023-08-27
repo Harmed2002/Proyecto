@@ -1,0 +1,27 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+    /* background-color: antiquewhite; */
+    background-color: black;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+}
+
+.container {
+    background-color: rgb(21, 21, 21);
+    padding: 10px;
+}
+
+
+footer {
+    background-color: rgb(21, 21, 21);
+    height: 40px;
+}
+
+span {
+    color: rgb(110, 109, 109);
+}

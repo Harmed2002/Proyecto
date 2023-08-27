@@ -1,1 +1,31 @@
-<h1>Products</h1>
+<h1>Listado de Productos (Http)</h1>
+<div class="container">
+	<div class="card">
+		<table id="productsTable" class="table table-dark table-striped">
+			<thead>
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Título</th>
+					<th scope="col">Descripción</th>
+					<th scope="col">Categoría</th>
+					<th scope="col">Precio</th>
+					<th scope="col">Código</th>
+					<th scope="col">Stock</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each products}}
+				<tr>
+					<td>{{this.id}}</td>
+					<td>{{this.title}}</td>
+					<td>{{this.description}}</td>
+					<td>{{this.category}}</td>
+					<td>{{this.price}}</td>
+					<td>{{this.code}}</td>
+					<td>{{this.stock}}</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

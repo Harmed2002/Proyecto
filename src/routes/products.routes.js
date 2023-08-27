@@ -23,7 +23,7 @@ productRouter.get('/', async (req, res) => {
 
 	} else {
 		res.status(400).send("Error al cargar productos")
-	}	
+	}
 })
 
 // Mostrar un producto por id

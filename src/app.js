@@ -5,6 +5,10 @@ import { engine } from 'express-handlebars';
 import { __dirname } from './path.js';
 import path from 'path';
 import { Server } from 'socket.io';
+import ProductManager from './ProductManager.js';
+
+const PATH_PRODUCTS = './src/data/products.json';
+const productManager = new ProductManager(PATH_PRODUCTS);
 
 const prods = [];
 const PORT = 8080;
@@ -32,11 +36,16 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('nuevoProducto', (nuevoProd) => {
-        // console.log('nuevoProd', nuevoProd) // ok
-        prods.push(nuevoProd);          // Agrego el nuevo producto en el array de productos
-        // console.log('prods', prods) // ok
-        socket.emit('prods', prods);    // Devuelvo el array actualizado
+    socket.on('nuevoProducto', async (nuevoProd) => {
+        // Se guarda en productManager
+        const thumbnail = ["No Definido"];
+        const { code, title, price, description, category, status, stock } = nuevoProd;
+	    const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnail);
+        const products = await productManager.getProducts();
+        socket.emit('products-data', products);
+
+        // prods.push(nuevoProd);          // Agrego el nuevo producto en el array de productos
+        // socket.emit('prods', prods);    // Devuelvo el array actualizado
     });
 });
 
@@ -46,7 +55,8 @@ app.engine('handlebars', engine());
 // Setting de mi app de handlebars
 app.set('view engine', 'handlebars'); // Extensión de las vistas
 app.set('views', path.resolve(__dirname, './views')); // Ruta de las vistas
-app.use('/static', express.static(path.join(__dirname, '/public'))) //Unir rutas en una sola concatenandolas
+// app.use('/static', express.static(path.join(__dirname, '/public'))) //Unir rutas en una sola concatenandolas
+app.use('/', express.static(path.join(__dirname, '/public'))) //Unir rutas en una sola concatenandolas
 app.use('/realtimeproducts', express.static(path.join(__dirname, '/public')))
 
 
@@ -54,10 +64,26 @@ app.use('/realtimeproducts', express.static(path.join(__dirname, '/public')))
 // app.use('/api/product', productRouter);
 // app.use('/api/cart', cartRouter);
 
-app.get('/static', (req, res) => {
+app.get('/', async (req, res) => {
+    const products = await productManager.getProducts();
+
+	if (products) {
+        res.render('products', {
+            css: "products.css",
+            title: "Home",
+            products: products
+        });
+
+	} else {
+		res.status(400).send("Error al cargar productos")
+	}
+
+})
+
+app.get('/realtimeproducts', (req, res) => {
     res.render('realTimeProducts', {
         css: "style.css",
-        title: "Home",
+        title: "Socket",
         js: "realTimeProducts.js"
     });
 })
