@@ -43,9 +43,6 @@ io.on('connection', (socket) => {
 	    const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnail);
         const products = await productManager.getProducts();
         socket.emit('products-details', products);
-
-        // prods.push(nuevoProd);          // Agrego el nuevo producto en el array de productos
-        // socket.emit('prods', prods);    // Devuelvo el array actualizado
     });
 });
 
@@ -55,15 +52,11 @@ app.engine('handlebars', engine());
 // Setting de mi app de handlebars
 app.set('view engine', 'handlebars'); // Extensión de las vistas
 app.set('views', path.resolve(__dirname, './views')); // Ruta de las vistas
-// app.use('/static', express.static(path.join(__dirname, '/public'))) //Unir rutas en una sola concatenandolas
 app.use('/', express.static(path.join(__dirname, '/public'))) //Unir rutas en una sola concatenandolas
 app.use('/realtimeproducts', express.static(path.join(__dirname, '/public')))
 
 
 //Routes
-// app.use('/api/product', productRouter);
-// app.use('/api/cart', cartRouter);
-
 app.get('/', async (req, res) => {
     const products = await productManager.getProducts();
 
