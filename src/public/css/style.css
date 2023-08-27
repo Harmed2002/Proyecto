@@ -1,0 +1,58 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+    /* background-color: antiquewhite; */
+    background-color: black;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+}
+
+.container {
+    background-color: rgb(21, 21, 21);
+    padding: 20px;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: black;
+}
+
+label, input {
+    display: block;
+    margin-bottom: 10px;
+}
+
+label {
+    color: white;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: red;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+footer {
+    background-color: rgb(21, 21, 21);
+    height: 40px;
+}
+
+span {
+    color: rgb(110, 109, 109);
+}

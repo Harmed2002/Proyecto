@@ -6,6 +6,7 @@ import { __dirname } from './path.js';
 import path from 'path';
 import { Server } from 'socket.io';
 
+const prods = [];
 const PORT = 8080;
 const app = express();
 // Subo el servidor Express
@@ -25,10 +26,17 @@ io.on('connection', (socket) => {
         // console.log(user.rol);
         if (user.rol === "Admin") {
             socket.emit("credencialesConexion", "Usuario Válido");
-            
+
         } else {
             socket.emit("credencialesConexion", "Usuario No Válido");
         }
+    });
+
+    socket.on('nuevoProducto', (nuevoProd) => {
+        // console.log('nuevoProd', nuevoProd) // ok
+        prods.push(nuevoProd);          // Agrego el nuevo producto en el array de productos
+        // console.log('prods', prods) // ok
+        socket.emit('prods', prods);    // Devuelvo el array actualizado
     });
 });
 
@@ -47,7 +55,11 @@ app.use('/realtimeproducts', express.static(path.join(__dirname, '/public')))
 // app.use('/api/cart', cartRouter);
 
 app.get('/static', (req, res) => {
-    res.render('home');
+    res.render('realTimeProducts', {
+        css: "style.css",
+        title: "Home",
+        js: "realTimeProducts.js"
+    });
 })
 
 
