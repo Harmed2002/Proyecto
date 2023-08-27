@@ -27,7 +27,6 @@ const io = new Server(serverExpress);
 io.on('connection', (socket) => {
     console.log("Servidor Socket.io conectado");
     socket.on('mensajeConexion', (user) => {
-        // console.log(user.rol);
         if (user.rol === "Admin") {
             socket.emit("credencialesConexion", "Usuario Válido");
 
@@ -39,10 +38,11 @@ io.on('connection', (socket) => {
     socket.on('nuevoProducto', async (nuevoProd) => {
         // Se guarda en productManager
         const thumbnail = ["No Definido"];
-        const { code, title, price, description, category, status, stock } = nuevoProd;
+        const status = true;
+        const { code, title, price, description, category, stock } = nuevoProd;
 	    const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnail);
         const products = await productManager.getProducts();
-        socket.emit('products-data', products);
+        socket.emit('products-details', products);
 
         // prods.push(nuevoProd);          // Agrego el nuevo producto en el array de productos
         // socket.emit('prods', prods);    // Devuelvo el array actualizado
@@ -80,12 +80,19 @@ app.get('/', async (req, res) => {
 
 })
 
-app.get('/realtimeproducts', (req, res) => {
-    res.render('realTimeProducts', {
-        css: "style.css",
-        title: "Socket",
-        js: "realTimeProducts.js"
-    });
+app.get('/realtimeproducts', async (req, res) => {
+    const products = await productManager.getProducts();
+
+    if (products) {
+        res.render('realTimeProducts', {
+            css: "style.css",
+            title: "Socket",
+            products: products,
+            js: "realTimeProducts.js"
+        });
+    } else {
+		res.status(400).send("Error al cargar productos")
+	}
 })
 
 
