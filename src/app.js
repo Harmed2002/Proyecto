@@ -9,7 +9,7 @@ const PORT = 8000;
 const app = express();
 
 // Establezco la conección a Mongoose
-mongoose.connect('mongodb+srv://harmed2002:3gEGKitALiASCMSH@cluster0.0kdtqxd.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://harmed2002:password@cluster0.0kdtqxd.mongodb.net/?retryWrites=true&w=majority')
     .then(() => console.log("BDD conectada!"))
     .catch(() => console.log("Error en conexión a BDD"));
 
