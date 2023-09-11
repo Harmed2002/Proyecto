@@ -1,31 +1,23 @@
 import { Router } from 'express';
-import ProductManager from '../ProductManager.js';
+import { productModel } from '../models/products.models.js';
 
 const productRouter = Router();
-const PATH_PRODUCTS = './src/data/products.json';
-const productManager = new ProductManager(PATH_PRODUCTS);
 
 // Mostrar todos los productos
 productRouter.get('/', async (req, res) => {
-	const products = await productManager.getProducts();
+	try {
+		const products = await productModel.find();
 
-	if (products) {
-		const { limit } = req.query;
+		res.status(200).send({respuesta: 'OK', mensaje: products});
 
-		if (/^\d+$/.test(limit)) {
-			const productsLimit = +limit;
-			const productsRange = products.slice(0, productsLimit);
-
-			return res.status(200).send(productsRange);
-		}
-
-		res.status(200).send(products);
-
-	} else {
-		res.status(400).send("Error al cargar productos")
+	} catch (error) {
+		req.status(400).send({respuesta: 'Error', mensaje: error});
 	}
+
+	
 })
 
+/*
 // Mostrar un producto por id
 productRouter.get('/:pid', async (req, res) => {
 	const { pid } = req.params;
@@ -77,4 +69,5 @@ productRouter.delete('/:pid', async (req, res)=> {
 	return res.status(200).send("Producto eliminado")
   })
 
+*/
 export default productRouter;
