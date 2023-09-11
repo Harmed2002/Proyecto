@@ -8,66 +8,88 @@ productRouter.get('/', async (req, res) => {
 	try {
 		const products = await productModel.find();
 
-		res.status(200).send({respuesta: 'OK', mensaje: products});
+		if (products)
+			res.status(200).send({respuesta: 'OK', mensaje: products});
+		else
+			res.status(404).send({respuesta: 'Error al consultar productos', mensaje: 'Not Found'});
 
 	} catch (error) {
-		req.status(400).send({respuesta: 'Error', mensaje: error});
+		res.status(400).send({respuesta: 'Error', mensaje: error});
 	}
 
-	
 })
 
-/*
 // Mostrar un producto por id
-productRouter.get('/:pid', async (req, res) => {
-	const { pid } = req.params;
-	const product = await productManager.getProductById(parseInt(pid));
-	
-	if (!product) {
-		return res.status(404).send("EL PRODUCTO NO EXISTE");
+productRouter.get('/:id', async (req, res) => {
+	const {id} = req.params;
+
+	try {
+		const product = await productModel.findById(id);
+
+		if (product)
+			res.status(200).send({respuesta: 'OK', mensaje: product});
+		else
+			res.status(404).send({respuesta: 'Error al consultar producto', mensaje: 'Not Found'});
+
+	} catch (error) {
+		res.status(400).send({respuesta: 'Error', mensaje: error});
 	}
 
-	res.status(200).send(product);
 })
 
-// Inserción de producto
-productRouter.post('/', async (req, res)=> {
-	const { code, title, price, description, category, status, stock, thumbnail } = req.body;
+// Grabar un producto
+productRouter.post('/', async (req, res) => {
+	const { code, title, price, description, category, status, stock } = req.body;
 
-	const product = await productManager.addProduct(code, title, price, description, category, status, stock, thumbnail);
+	try {
+		const respuesta = await productModel.create({ code, title, price, description, category, status, stock });
 
-	if (!product){
-		return res.status(400).send("Error el ingresar producto")
+		if (products)
+			res.status(200).send({respuesta: 'OK', mensaje: respuesta});
+		else
+			res.status(404).send({respuesta: 'Error al grabar un producto', mensaje: 'Not Found'});
+
+	} catch (error) {
+		res.status(400).send({respuesta: 'Error', mensaje: error});
 	}
 
-	res.status(200).send("Producto ingresado")
-
-});
-
-// Actualización de un producto
-productRouter.put('/:pid', async (req, res)=> {
-	const {pid} = req.params;
-	const proData = req.body;
-	const product = await productManager.updateProduct(parseInt(pid), proData);
-  
-	if(!product){
-		return res.status(400).send("Error el actualizar producto");
-	}
-	
-	res.status(200).send("Producto actualizado");
 })
 
-// Eliminación de un producto
-productRouter.delete('/:pid', async (req, res)=> {
-	const {pid} = req.params;
-	const product = await productManager.deleteProduct(parseInt(pid));
-  
-	if(!product){
-		res.status(400).send("Error el eliminar producto")
-	}
-	
-	return res.status(200).send("Producto eliminado")
-  })
+// Actualizar un producto
+productRouter.put('/:id', async (req, res) => {
+	const {id} = req.params;
+	const { code, title, price, description, category, status, stock } = req.body;
 
-*/
+	try {
+		const product = await productModel.findByIdAndUpdate(id, { code, title, price, description, category, status, stock });
+
+		if (product)
+			res.status(200).send({respuesta: 'OK', mensaje: product});
+		else
+			res.status(404).send({respuesta: 'Error al actualizar un producto', mensaje: 'Not Found'});
+
+	} catch (error) {
+		res.status(400).send({respuesta: 'Error', mensaje: error});
+	}
+
+})
+
+// Borrar un producto
+productRouter.delete('/:id', async (req, res) => {
+	const {id} = req.params;
+
+	try {
+		const product = await productModel.findByIdAndDelete(id);
+
+		if (product)
+			res.status(200).send({respuesta: 'OK', mensaje: product});
+		else
+			res.status(404).send({respuesta: 'Error al eliminar un producto', mensaje: 'Not Found'});
+
+	} catch (error) {
+		res.status(400).send({respuesta: 'Error', mensaje: error});
+	}
+
+})
+
 export default productRouter;
